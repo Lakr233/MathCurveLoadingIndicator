@@ -1,0 +1,64 @@
+name: Swift
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift Test
+        run: swift test
+
+  build-library:
+    runs-on: macos-15
+    strategy:
+      matrix:
+        destination:
+          - "generic/platform=macOS"
+          - "generic/platform=macOS,variant=Mac Catalyst"
+          - "generic/platform=iOS"
+          - "generic/platform=iOS Simulator"
+          - "generic/platform=tvOS"
+          - "generic/platform=tvOS Simulator"
+          - "generic/platform=xrOS"
+          - "generic/platform=xrOS Simulator"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for ${{ matrix.destination }}
+        run: |
+          xcodebuild \
+            -scheme MathCurveLoadingIndicator \
+            -destination "${{ matrix.destination }}" \
+            -configuration Release \
+            clean build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            -quiet
+
+  build-app:
+    runs-on: macos-15
+    needs: build-library
+    strategy:
+      matrix:
+        destination:
+          - "generic/platform=macOS"
+          - "generic/platform=iOS"
+          - "generic/platform=xrOS"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build App for ${{ matrix.destination }}
+        run: |
+          xcodebuild \
+            -workspace ./MathCurve.xcworkspace \
+            -scheme MatchCurve \
+            -destination "${{ matrix.destination }}" \
+            -configuration Release \
+            clean build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            -quiet
