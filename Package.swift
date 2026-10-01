@@ -15,13 +15,13 @@ let package = Package(
         .library(name: "MathCurveLoadingIndicator", targets: ["MathCurveLoadingIndicator"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Lakr233/MSDisplayLink.git", from: "2.0.8"),
+        .package(url: "https://github.com/Lakr233/DisplayLink.git", from: "3.0.0"),
     ],
     targets: [
         .target(
             name: "MathCurveLoadingIndicator",
             dependencies: [
-                "MSDisplayLink",
+                "DisplayLink",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v6),

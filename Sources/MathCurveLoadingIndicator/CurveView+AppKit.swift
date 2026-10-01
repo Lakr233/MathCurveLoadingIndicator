@@ -5,7 +5,7 @@ import Foundation
     import AppKit
 
     open class NSCurveView: NSView {
-        var curveLink: CurveLink? = .init()
+        var curveLink: CurveLink?
         let contentLayer = CALayer()
         var qualifiedForUpdate: Bool = true
 
@@ -28,6 +28,7 @@ import Foundation
                 ]
                 layer.addSublayer(contentLayer)
 
+                curveLink = .init(context: .view(self))
                 curveLink?.onSynchronizationUpdate = { [weak self] in
                     self?.vsyncCheckQualificationAndSend()
                 }

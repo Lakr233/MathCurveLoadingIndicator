@@ -1,22 +1,21 @@
+import DisplayLink
 import Foundation
-import MSDisplayLink
 
 @MainActor
 class CurveLink: DisplayLinkDelegate {
-    let displayLink: DisplayLink = .init()
+    let displayLink: DisplayLink
 
     typealias SynchronizationUpdate = @MainActor () -> Void
     var onSynchronizationUpdate: SynchronizationUpdate?
 
-    init() {
-        displayLink.delegatingObject(self)
+    init(context: DisplayLinkContext) {
+        displayLink = .init(context: context)
+        displayLink.delegate = self
     }
 
     deinit {}
 
-    nonisolated func synchronization(context _: DisplayLinkCallbackContext) {
-        MainActor.assumeIsolated {
-            onSynchronizationUpdate?()
-        }
+    func displayLink(_: DisplayLink, didUpdate _: DisplayLinkFrame) {
+        onSynchronizationUpdate?()
     }
 }

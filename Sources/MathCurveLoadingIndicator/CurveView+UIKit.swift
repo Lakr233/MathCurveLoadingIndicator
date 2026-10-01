@@ -2,7 +2,7 @@
     import UIKit
 
     open class UICurveView: UIView {
-        var curveLink: CurveLink? = .init()
+        var curveLink: CurveLink?
         let contentLayer = CALayer()
         var qualifiedForUpdate: Bool = true
 
@@ -24,6 +24,7 @@
             ]
             layer.addSublayer(contentLayer)
 
+            curveLink = .init(context: .view(self))
             curveLink?.onSynchronizationUpdate = { [weak self] in
                 self?.vsyncCheckQualificationAndSend()
             }
